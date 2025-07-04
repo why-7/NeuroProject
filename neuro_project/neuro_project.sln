@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neuro_project", "neuro_project.csproj", "{CF7E19C3-D9BA-431E-A88D-28C645481CAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A317242-8A29-4F5D-9FDB-9BCF291B0E4B}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF7E19C3-D9BA-431E-A88D-28C645481CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7E19C3-D9BA-431E-A88D-28C645481CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7E19C3-D9BA-431E-A88D-28C645481CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7E19C3-D9BA-431E-A88D-28C645481CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
