@@ -1,7 +1,0 @@
-﻿services:
-  neuro_project:
-    image: neuro_project
-    build:
-      context: .
-      dockerfile: Dockerfile
-
