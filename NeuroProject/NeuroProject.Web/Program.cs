@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NeuroProject.BLL.Services;
+using NeuroProject.DAL.Repositories.Implementations;
+using NeuroProject.DAL.Repositories.Interfaces;
 using NeuroProject.Web.Data;
+using NeuroProject.Web.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,13 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IResearchRepository, ResearchRepository>();
+builder.Services.AddScoped<IRecordRepository, RecordRepository>();
+builder.Services.AddScoped<ITestSubjectRepository, TestSubjectRepository>();
+builder.Services.AddScoped<IResearchesService, ResearchesService>();
+
 
 var app = builder.Build();
 
@@ -20,6 +31,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
@@ -35,6 +48,7 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
