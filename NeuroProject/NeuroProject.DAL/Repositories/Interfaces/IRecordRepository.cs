@@ -4,5 +4,6 @@ namespace NeuroProject.DAL.Repositories.Interfaces;
 
 public interface IRecordRepository
 {
-    void Add(Record map);
+    Task Add(Record map);
+    IEnumerable<Record> GetAllById(Guid testSubjectId);
 }

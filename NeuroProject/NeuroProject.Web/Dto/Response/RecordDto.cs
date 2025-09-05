@@ -1,15 +1,14 @@
-using NeuroProject.DAL.Enums;
+using NeuroProject.Web.Enums;
 
-namespace NeuroProject.DAL.Models;
+namespace NeuroProject.Web.Dto.Response;
 
-public class Record
+public class RecordDto
 {
     public Guid Id { get; set; }
-    public RecordCategories Category { get; set; }
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
+    public RecordCategories Category { get; set; }
     public string Hash { get; set; }
     public double MetaFileSize { get; set; }
     public Guid TestSubjectId { get; set; }
-    public TestSubject TestSubject { get; set; }
 }

@@ -12,8 +12,14 @@ public class RecordRepository : IRecordRepository
         _context = context;
     }
     
-    public void Add(Record record)
+    public async Task Add(Record record)
     {
-        _context.Records.Add(record);
+        await _context.Records.AddAsync(record);
+        await _context.SaveChangesAsync();
+    }
+
+    public IEnumerable<Record> GetAllById(Guid testSubjectId)
+    {
+        return _context.Records.Where(x => x.TestSubjectId == testSubjectId).AsEnumerable();
     }
 }

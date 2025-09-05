@@ -14,5 +14,12 @@ public class TestSubjectRepository : ITestSubjectRepository
     public void Add(TestSubject testSubject)
     {
         _context.TestSubjects.Add(testSubject);
+        _context.SaveChanges();
     }
+
+    public IEnumerable<TestSubject> GetAllById(Guid researchId)
+    {
+        return _context.TestSubjects.Where(x => x.ResearchId == researchId).AsEnumerable();
+    }
+
 }

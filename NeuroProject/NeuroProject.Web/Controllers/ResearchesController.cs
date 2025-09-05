@@ -1,9 +1,11 @@
 using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NeuroProject.BLL.BusinessModels;
 using NeuroProject.BLL.Services;
 using NeuroProject.Web.Dto;
+using NeuroProject.Web.Dto.Response;
 
 namespace NeuroProject.Web.Controllers;
 
@@ -20,6 +22,7 @@ public class ResearchesController : Controller
         _mapper = mapper;
     }
     
+    [Authorize]
     [HttpPost]
     public IActionResult CreateNewResearch([FromForm]CreateResearchDto dto)
     {
@@ -29,28 +32,60 @@ public class ResearchesController : Controller
         return Ok(id);
     }
     
-    [HttpPost("add-subject")]
+    [Authorize]
+    [HttpPost("add-test-subject")]
     public IActionResult AddTestSubject([FromForm]AddTestSubjectDto dto)
     {
-        var id =  _researchesService.AddTestSubject(_mapper.Map<TestSubjecBm>(dto));
+        var id =  _researchesService.AddTestSubject(_mapper.Map<TestSubjectBm>(dto));
         return Ok(id);
     }
     
+    [Authorize]
     [HttpPost("add-record")]
     public IActionResult AddRecord([FromForm]AddRecordDto dto)
     {
-        var id =  _researchesService.AddRecord(_mapper.Map<RecordBm>(dto));
+        var uploadedFileBytes = GetBytesOfFile(dto.FileRecord).Result;
+        var bm = _mapper.Map<RecordBm>(dto);
+        bm.FileBytes = uploadedFileBytes;
+        var id =  _researchesService.AddRecord(bm);
         return Ok(id);
+    } 
+
+    [Authorize]
+    [HttpGet("get-researches")]
+    public IActionResult GetResearches()
+    {
+        var userId =  Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var researches = _researchesService.GetResearches(userId);
+        return Ok(_mapper.Map<IEnumerable<ResearchDto>>(researches));
     }
     
-    // private async Task<byte[]> GetBytesOfFile(IFormFile uploadedFile)
-    // {
-    //     byte[] uploadedFileBytes = null;
-    //
-    //     await using var memoryStream = new MemoryStream();
-    //     await uploadedFile.CopyToAsync(memoryStream);
-    //     uploadedFileBytes = memoryStream.ToArray();
-    //
-    //     return uploadedFileBytes;
-    // }
+    [Authorize]
+    [Route("get-test-subjects/{researchId}")]
+    [HttpGet]
+    public IActionResult GetTestSubjects(Guid researchId)
+    {
+        var testSubjects = _researchesService.GetTestSubjects(researchId);
+        return Ok(_mapper.Map<IEnumerable<TestSubjectDto>>(testSubjects));
+    }
+    
+    [Authorize]
+    [Route("get-records/{testSubjectId}")]
+    [HttpGet]
+    public IActionResult GetRecords(Guid testSubjectId)
+    {
+        var records = _researchesService.GetRecords(testSubjectId);
+        return Ok(_mapper.Map<IEnumerable<RecordDto>>(records));
+    }
+    
+    private async Task<byte[]> GetBytesOfFile(IFormFile uploadedFile)
+    {
+        byte[] uploadedFileBytes = null;
+    
+        await using var memoryStream = new MemoryStream();
+        await uploadedFile.CopyToAsync(memoryStream);
+        uploadedFileBytes = memoryStream.ToArray();
+    
+        return uploadedFileBytes;
+    }
 }

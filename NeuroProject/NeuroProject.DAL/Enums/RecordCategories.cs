@@ -1,4 +1,4 @@
-namespace NeuroProject.Web.Enums;
+namespace NeuroProject.DAL.Enums;
 
 public enum RecordCategories
 {

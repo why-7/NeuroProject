@@ -1,28 +1,49 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NeuroProject.BLL.Services;
+using NeuroProject.DAL.Models;
 using NeuroProject.DAL.Repositories.Implementations;
 using NeuroProject.DAL.Repositories.Interfaces;
-using NeuroProject.Web.Data;
-using NeuroProject.Web.Mapping;
+using NeuroProject.BLL.BusinessModels;
+using NeuroProject.DAL;
+using NeuroProject.Web.Dto;
+using NeuroProject.Web.Dto.Response;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ResearchesDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"),
+        x => x.MigrationsAssembly("NeuroProject.DAL")));
+            
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IResearchRepository, ResearchRepository>();
 builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 builder.Services.AddScoped<ITestSubjectRepository, TestSubjectRepository>();
 builder.Services.AddScoped<IResearchesService, ResearchesService>();
+builder.Services.AddAutoMapper(cfg => 
+{
+    cfg.CreateMap<CreateResearchDto, ResearchBm>();
+    cfg.CreateMap<AddTestSubjectDto, TestSubjectBm>();
+    cfg.CreateMap<AddRecordDto, RecordBm>();
+    cfg.CreateMap<ResearchBm, Research>();
+    cfg.CreateMap<TestSubjectBm, TestSubject>();
+    cfg.CreateMap<RecordBm, Record>();
+    cfg.CreateMap<Research, ResearchBm>();
+    cfg.CreateMap<TestSubject, TestSubjectBm>();
+    cfg.CreateMap<Record, RecordBm>();
+    cfg.CreateMap<ResearchBm, ResearchDto>();
+    cfg.CreateMap<TestSubjectBm, TestSubjectDto>();
+    cfg.CreateMap<RecordBm, RecordDto>();
+});
 
 
 var app = builder.Build();

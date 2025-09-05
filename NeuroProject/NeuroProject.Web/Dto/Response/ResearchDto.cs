@@ -1,8 +1,6 @@
-using NeuroProject.BLL.Enums;
+namespace NeuroProject.Web.Dto.Response;
 
-namespace NeuroProject.BLL.BusinessModels;
-
-public class ResearchBm
+public class ResearchDto
 {
     public string Title { get; set; }
     public Guid AuthorId { get; set; }

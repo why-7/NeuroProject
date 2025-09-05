@@ -15,5 +15,11 @@ public class ResearchRepository : IResearchRepository
     public void Add(Research research)
     {
         _context.Researches.Add(research);
+        _context.SaveChanges();
+    }
+
+    public IEnumerable<Research> GetAllById(Guid id)
+    {
+        return _context.Researches.Where(x => x.AuthorId == id).AsEnumerable();
     }
 }
